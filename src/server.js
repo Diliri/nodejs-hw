@@ -51,8 +51,9 @@ app.use((req, res) => {
 
 // 6. Middleware для обробки помилок (500)
 app.use((err, req, res, next) => {
+  const isProduction = process.env.NODE_ENV === 'production';
   res.status(500).json({
-    message: err.message || 'Internal Server Error',
+    message: isProduction ? err.message || 'Internal Server Error' : err.stack,
   });
 });
 
