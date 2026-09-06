@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import pinoHttp from 'pino-http';
+import helmet from 'helmet';
 
 dotenv.config();
 
@@ -9,7 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // 1. Стандартні Middleware
-app.use(cors());
+app.use(helmet());
+app.use(cors()); // кросдоменні http-запити
 app.use(express.json());
 
 // 2. Логер HTTP-запитів
