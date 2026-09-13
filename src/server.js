@@ -1,8 +1,13 @@
+// server.js
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import pinoHttp from 'pino-http';
 import helmet from 'helmet';
+import dotenv from 'dotenv';
+import { connectMongoDB } from './db/connectMongoDB.js';
+import notesRoutes from './routes/notesRoutes.js';
+import { logger } from './middleware/logger.js';
+import { notFoundHandler } from './middleware/notFoundHandler.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
 
@@ -15,47 +20,19 @@ app.use(cors()); // кросдоменні http-запити
 app.use(express.json());
 
 // 2. Логер HTTP-запитів
-app.use(
-  pinoHttp({
-    transport: {
-      target: 'pino-pretty',
-    },
-  }),
-);
+app.use(logger);
 
 // 3. Маршрути нотаток
-app.get('/notes', (req, res) => {
-  res.status(200).json({
-    message: 'Retrieved all notes',
-  });
-});
-
-app.get('/notes/:noteId', (req, res) => {
-  const { noteId } = req.params;
-  res.status(200).json({
-    message: `Retrieved note with ID: ${noteId}`,
-  });
-});
-
-// 4. Тестовий маршрут для імітації помилки
-app.get('/test-error', (req, res) => {
-  throw new Error('Simulated server error');
-});
+app.use(notesRoutes); // Express тепер знає про всі роути, які ми описали в notesRoutes.js!
 
 // 5. Middleware для обробки неіснуючих маршрутів (404)
-app.use((req, res) => {
-  res.status(404).json({
-    message: 'Route not found',
-  });
-});
+app.use(notFoundHandler);
 
 // 6. Middleware для обробки помилок (500)
-app.use((err, req, res, next) => {
-  const isProduction = process.env.NODE_ENV === 'production';
-  res.status(500).json({
-    message: isProduction ? err.message || 'Internal Server Error' : err.stack,
-  });
-});
+app.use(errorHandler);
+
+// підключення до MongoDB
+await connectMongoDB();
 
 // Запуск сервера
 app.listen(PORT, () => {
