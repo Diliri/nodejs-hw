@@ -24,7 +24,7 @@ export const getAllNotes = async (req, res, next) => {
     const totalNotes = await Note.countDocuments(myQuery.getFilter());
     const totalPages = Math.ceil(totalNotes / perPage);
     const skip = (page - 1) * perPage;
-    const notes = await notes.skip(skip).limit(perPage).exec();
+    const notes = await myQuery.skip(skip).limit(perPage).exec();
 
     res.status(200).json({
       page: Number(page),
