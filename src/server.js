@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import { errors } from 'celebrate';
 import { connectMongoDB } from './db/connectMongoDB.js';
 import notesRoutes from './routes/notesRoutes.js';
 import { logger } from './middleware/logger.js';
@@ -27,6 +28,9 @@ app.use(notesRoutes); // Express тепер знає про всі роути, �
 
 // 5. Middleware для обробки неіснуючих маршрутів (404)
 app.use(notFoundHandler);
+
+// Додали мідлвару валідації
+app.use(errors());
 
 // 6. Middleware для обробки помилок (500)
 app.use(errorHandler);
