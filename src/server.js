@@ -5,10 +5,12 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import { errors } from 'celebrate';
 import { connectMongoDB } from './db/connectMongoDB.js';
+import authRoutes from './routes/authRoutes.js';
 import notesRoutes from './routes/notesRoutes.js';
 import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -19,10 +21,12 @@ const PORT = process.env.PORT || 3000;
 app.use(helmet());
 app.use(cors()); // кросдоменні http-запити
 app.use(express.json());
+app.use(cookieParser());
 
 // 2. Логер HTTP-запитів
 app.use(logger);
-
+// маршрут аутентифікації
+app.use(authRoutes);
 // 3. Маршрути нотаток
 app.use(notesRoutes); // Express тепер знає про всі роути, які ми описали в notesRoutes.js!
 
