@@ -7,6 +7,7 @@ import { errors } from 'celebrate';
 import { connectMongoDB } from './db/connectMongoDB.js';
 import authRoutes from './routes/authRoutes.js';
 import notesRoutes from './routes/notesRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -29,6 +30,9 @@ app.use(logger);
 app.use(authRoutes);
 // 3. Маршрути нотаток
 app.use(notesRoutes); // Express тепер знає про всі роути, які ми описали в notesRoutes.js!
+
+// Додаємо раути користувача
+app.use(userRoutes);
 
 // 5. Middleware для обробки неіснуючих маршрутів (404)
 app.use(notFoundHandler);
