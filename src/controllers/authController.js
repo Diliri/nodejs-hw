@@ -156,18 +156,18 @@ export const requestResetEmail = async (req, res, next) => {
       // 5. Передаємо HTML у функцію надписання пошти
       html,
     });
-    // } catch {
-    //   throw createHttpError(
-    //     500,
-    //     'Failed to send the email, please try again later.',
-    //   );
-  } catch (error) {
-    console.error('ПОМИЛКА ВІДПРАВКИ ЛИСТА:', error);
-    throw error;
-    // throw createHttpError(
-    //   500,
-    //   'Failed to send the email, please try again later.',
-    // );
+  } catch {
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+    // } catch (error) {
+    //   console.error('ПОМИЛКА ВІДПРАВКИ ЛИСТА:', error);
+    //   throw error;
+    //   // throw createHttpError(
+    //   //   500,
+    //   //   'Failed to send the email, please try again later.',
+    //   // );
   }
 
   // Та сама "нейтральна" відповідь
